@@ -7,25 +7,39 @@ JavaScript engine — everything is QPainter and plain Qt Widgets.
 
 ## Layout
 
-- `include/sxui/`, `src/` — the static `sxui` library
-  - `Theme` — design tokens (colors, fonts, metrics); single source of truth
-    for the palette, swappable at `Theme::current()`
-  - `Style` — `QProxyStyle` over Fusion that restyles the *standard* Qt
-    widgets (buttons, checkboxes, radios, sliders, scrollbars, progress
-    bars, line edits, combo boxes, tabs, headers), so plain Qt code picks
-    up the theme with zero sxui-specific classes
-  - Custom widgets: `Panel` (titled section frame), `Toggle` (animated
-    switch), `Gauge` (270° dial with thresholds + animation)
-  - Charts: `LineChart` (multi-series, auto-scaling, live append with
-    rolling window, area fill + subtle glow), `BarChart`
-  - `FileBrowser` — filesystem browser drawn as archive entry cards
-    (outlined icon, name, amber date line, size at the right edge);
-    directories descend on activation, files emit `fileActivated()`
-  - `ImageView` — pan/zoom image viewer (wheel zoom anchored at the
-    cursor, drag pan, double-click to fit) with an optional phosphor
-    mode that remaps any image through a green luminance ramp
-- `apps/gallery/` — component gallery / visual regression app
-- `docs/PLAN.md` — roadmap and status
+The library is organized by module; each class keeps its header and
+source together, and headers are included as `<sxui/<module>/<Class>.h>`
+(or everything at once via `<sxui/Sxui.h>`).
+
+```
+sxui/                    the static sxui library
+├── Sxui.h / Sxui.cpp    umbrella header + sxui::init()
+├── core/
+│   ├── Theme            design tokens (colors, fonts, metrics); single
+│   │                    source of truth, swappable at Theme::current()
+│   └── Style            QProxyStyle over Fusion restyling the standard
+│                        Qt widgets (buttons, checkboxes, radios, sliders,
+│                        scrollbars, progress bars, line edits, combo
+│                        boxes, tabs, headers) — plain Qt code picks up
+│                        the theme with zero sxui-specific classes
+├── widgets/
+│   ├── Panel            titled section frame with status chip
+│   ├── Toggle           animated on/off switch
+│   ├── Gauge            270° dial with thresholds + animated value
+│   ├── FileBrowser      filesystem browser drawn as archive entry cards
+│   │                    (outlined icon, name, amber date line, size);
+│   │                    dirs descend on activation, files emit
+│   │                    fileActivated()
+│   └── ImageView        pan/zoom image viewer (cursor-anchored wheel
+│                        zoom, drag pan, double-click to fit) with an
+│                        optional phosphor luminance-ramp mode
+├── charts/
+│   ├── LineChart        multi-series, auto-scaling axes, live append
+│   │                    with rolling window, area fill + subtle glow
+│   └── BarChart         dim fill, bright cap, value labels
+apps/gallery/            component gallery / visual regression app
+docs/PLAN.md             roadmap and status
+```
 
 ## Usage
 

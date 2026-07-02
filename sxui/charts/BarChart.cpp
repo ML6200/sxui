@@ -1,5 +1,5 @@
-#include "sxui/BarChart.h"
-#include "sxui/Theme.h"
+#include "sxui/charts/BarChart.h"
+#include "sxui/core/Theme.h"
 
 #include <QPainter>
 #include <cmath>

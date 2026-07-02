@@ -1,5 +1,5 @@
-#include "sxui/Panel.h"
-#include "sxui/Theme.h"
+#include "sxui/widgets/Panel.h"
+#include "sxui/core/Theme.h"
 
 #include <QPaintEvent>
 #include <QPainter>

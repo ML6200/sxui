@@ -1,5 +1,5 @@
-#include "sxui/Gauge.h"
-#include "sxui/Theme.h"
+#include "sxui/widgets/Gauge.h"
+#include "sxui/core/Theme.h"
 
 #include <QPainter>
 #include <QVariantAnimation>

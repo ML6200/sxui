@@ -1,5 +1,5 @@
-#include "sxui/widgets/FileBrowser.h"
-#include "sxui/core/Theme.h"
+#include "widgets/FileBrowser.h"
+#include "core/Theme.h"
 
 #include <QDateTime>
 #include <QDir>

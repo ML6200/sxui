@@ -1,5 +1,5 @@
-#include "sxui/widgets/ImageView.h"
-#include "sxui/core/Theme.h"
+#include "widgets/ImageView.h"
+#include "core/Theme.h"
 
 #include <QFileInfo>
 #include <QImageReader>

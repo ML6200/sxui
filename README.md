@@ -8,11 +8,12 @@ JavaScript engine — everything is QPainter and plain Qt Widgets.
 ## Layout
 
 The library is organized by module; each class keeps its header and
-source together, and headers are included as `<sxui/<module>/<Class>.h>`
-(or everything at once via `<sxui/Sxui.h>`).
+source together, and headers are included as `<module/Class.h>` (or
+everything at once via `<Sxui.h>`) — the `sxui::` namespace carries the
+prefix.
 
 ```
-sxui/                    the static sxui library
+src/                     the static sxui library
 ├── Sxui.h / Sxui.cpp    umbrella header + sxui::init()
 ├── core/
 │   ├── Theme            design tokens (colors, fonts, metrics); single
@@ -44,7 +45,7 @@ docs/PLAN.md             roadmap and status
 ## Usage
 
 ```cpp
-#include <sxui/Sxui.h>
+#include <Sxui.h>
 
 int main(int argc, char** argv)
 {

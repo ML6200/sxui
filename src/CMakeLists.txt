@@ -21,9 +21,9 @@ qt_add_library(sxui STATIC
     charts/BarChart.cpp
 )
 
-# Headers are addressed as <sxui/module/Class.h> from the repository root.
+# Headers are addressed as <module/Class.h> (or <Sxui.h>) from src/.
 target_include_directories(sxui PUBLIC
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
 target_link_libraries(sxui PUBLIC Qt6::Widgets)

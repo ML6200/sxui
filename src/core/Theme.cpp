@@ -1,4 +1,4 @@
-#include "sxui/core/Theme.h"
+#include "core/Theme.h"
 
 #include <QFontDatabase>
 

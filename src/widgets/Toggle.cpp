@@ -1,5 +1,5 @@
-#include "sxui/widgets/Toggle.h"
-#include "sxui/core/Theme.h"
+#include "widgets/Toggle.h"
+#include "core/Theme.h"
 
 #include <QPainter>
 #include <QVariantAnimation>

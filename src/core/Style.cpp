@@ -1,5 +1,5 @@
-#include "sxui/core/Style.h"
-#include "sxui/core/Theme.h"
+#include "core/Style.h"
+#include "core/Theme.h"
 
 #include <QPainter>
 #include <QPainterPath>

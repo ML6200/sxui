@@ -1,5 +1,5 @@
-#include "sxui/charts/LineChart.h"
-#include "sxui/core/Theme.h"
+#include "charts/LineChart.h"
+#include "core/Theme.h"
 
 #include <QPainter>
 #include <QPainterPath>

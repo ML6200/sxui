@@ -9,6 +9,8 @@
 #include "sxui/Gauge.h"
 #include "sxui/LineChart.h"
 #include "sxui/BarChart.h"
+#include "sxui/FileBrowser.h"
+#include "sxui/ImageView.h"
 
 class QApplication;
 

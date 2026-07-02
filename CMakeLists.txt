@@ -16,6 +16,8 @@ qt_add_library(sxui STATIC
     include/sxui/Gauge.h
     include/sxui/LineChart.h
     include/sxui/BarChart.h
+    include/sxui/FileBrowser.h
+    include/sxui/ImageView.h
     src/Sxui.cpp
     src/Theme.cpp
     src/Style.cpp
@@ -24,6 +26,8 @@ qt_add_library(sxui STATIC
     src/Gauge.cpp
     src/LineChart.cpp
     src/BarChart.cpp
+    src/FileBrowser.cpp
+    src/ImageView.cpp
 )
 
 target_include_directories(sxui PUBLIC

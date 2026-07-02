@@ -18,7 +18,14 @@ JavaScript engine — everything is QPainter and plain Qt Widgets.
     switch), `Gauge` (270° dial with thresholds + animation)
   - Charts: `LineChart` (multi-series, auto-scaling, live append with
     rolling window, area fill + subtle glow), `BarChart`
+  - `FileBrowser` — filesystem browser drawn as archive entry cards
+    (outlined icon, name, amber date line, size at the right edge);
+    directories descend on activation, files emit `fileActivated()`
+  - `ImageView` — pan/zoom image viewer (wheel zoom anchored at the
+    cursor, drag pan, double-click to fit) with an optional phosphor
+    mode that remaps any image through a green luminance ramp
 - `apps/gallery/` — component gallery / visual regression app
+- `docs/PLAN.md` — roadmap and status
 
 ## Usage
 

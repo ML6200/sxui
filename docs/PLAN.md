@@ -53,6 +53,21 @@ WebAssembly.
 - Tab polish: tab bars now use the heading typography (uppercase,
   letter-spaced) via Style::polish, with the bright active underline.
 
+### 0.5.0 — media module (2026-07-03)
+- `media/VideoView`: decoder-agnostic video display surface. Sources
+  (future RTSP/FFmpeg pipeline, file playback, test generators) push
+  frames via `presentFrame(QImage, timestamp)`; the widget handles
+  letterboxing, OSD (timestamp, camera name, LIVE/PLAYBACK badge,
+  resolution + measured FPS), NO SIGNAL state and an active border for
+  grid selection. Stream decoding is deliberately out of scope — it
+  belongs to a separate project that feeds this sink.
+- `media/Timeline`: zoomable recording timeline addressing the
+  motion-search pain of typical NVR clients: recorded segments, event
+  markers as first-class citizens (Motion/Alarm/Custom — source
+  agnostic, so camera events now and ML-derived tags later plug in the
+  same way), click/scrub seeking, cursor-anchored wheel zoom, and
+  prev/next-event navigation (PgUp/PgDn, `jumpTo*Marker()`).
+
 ## Next
 
 1. **App shell** — fullscreen/windowed application frame with page
@@ -66,6 +81,14 @@ WebAssembly.
    notification toasts, modal dialogs, virtual keyboard (touch kiosk).
 4. **Theme variants** — amber/red alternative palettes are already
    possible via `Theme::current()`; add presets.
+
+## Related projects (not part of this library)
+
+- **Stream engine**: RTSP client + FFmpeg decode (camera substream for
+  grids, mainstream for single view), recording to disk with a segment/
+  event index that Timeline can display; camera-side motion events via
+  ONVIF/ISAPI subscriptions. Later: ML tagging of recordings (objects,
+  faces, plates) emitted as Timeline markers to make archives searchable.
 
 ## Deferred / open
 

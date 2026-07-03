@@ -23,6 +23,10 @@ qt_add_library(sxui STATIC
     charts/LineChart.cpp
     charts/BarChart.h
     charts/BarChart.cpp
+    media/VideoView.h
+    media/VideoView.cpp
+    media/Timeline.h
+    media/Timeline.cpp
 )
 
 # Headers are addressed as <module/Class.h> (or <Sxui.h>) from src/.

@@ -45,6 +45,15 @@ src/                     the static sxui library
 │   ├── LineChart        multi-series, auto-scaling axes, live append
 │   │                    with rolling window, area fill + subtle glow
 │   └── BarChart         dim fill, bright cap, value labels
+├── media/
+│   ├── VideoView        decoder-agnostic video surface: any source
+│   │                    pushes QImage frames via presentFrame();
+│   │                    letterboxing, OSD (timestamp, camera name,
+│   │                    LIVE/PLAYBACK badge, res + measured FPS),
+│   │                    NO SIGNAL state, active-cell border
+│   └── Timeline         zoomable recording timeline: segments, event
+│                        markers (motion/alarm/custom), scrub + wheel
+│                        zoom, prev/next-event navigation (PgUp/PgDn)
 apps/gallery/            component gallery / visual regression app
                          (local only, not under version control)
 docs/PLAN.md             roadmap and status

@@ -17,6 +17,8 @@ qt_add_library(sxui STATIC
     widgets/ImageView.cpp
     widgets/TableEditor.h
     widgets/TableEditor.cpp
+    widgets/Workspace.h
+    widgets/Workspace.cpp
     charts/LineChart.h
     charts/LineChart.cpp
     charts/BarChart.h

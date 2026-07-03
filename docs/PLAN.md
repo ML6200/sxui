@@ -44,6 +44,15 @@ WebAssembly.
   from history entirely — the repository tracks only the library; the
   gallery remains a local untracked verification tool.
 
+### 0.4.0 — in-app windows & tabs (2026-07-03)
+- `Workspace`: themed QMdiArea wrapper. Sub-windows added via
+  `addWindow(content, title, size)` get phosphor title bars with painted
+  min/max/restore/close glyphs, active/inactive states, draggable and
+  resizable frames; tile/cascade and QMdiArea's tabbed view mode come
+  along for free. Style implements CC_TitleBar and PE_FrameWindow.
+- Tab polish: tab bars now use the heading typography (uppercase,
+  letter-spaced) via Style::polish, with the bright active underline.
+
 ## Next
 
 1. **App shell** — fullscreen/windowed application frame with page

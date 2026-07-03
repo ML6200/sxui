@@ -12,6 +12,7 @@
 #include "widgets/FileBrowser.h"
 #include "widgets/ImageView.h"
 #include "widgets/TableEditor.h"
+#include "widgets/Workspace.h"
 
 class QApplication;
 

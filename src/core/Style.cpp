@@ -6,6 +6,7 @@
 #include <QStyleFactory>
 #include <QStyleOption>
 #include <QStyleOptionComplex>
+#include <QTabBar>
 
 namespace sxui {
 
@@ -143,6 +144,16 @@ void Style::drawPrimitive(PrimitiveElement element, const QStyleOption* option,
     }
     case PE_PanelTipLabel: {
         drawBox(p, option->rect, t.surfaceRaised, t.primaryDim, t.radius);
+        return;
+    }
+    case PE_FrameWindow: {
+        const bool active = option->state & State_Active;
+        p->save();
+        p->fillRect(option->rect, t.surface);
+        p->setPen(QPen(active ? t.borderBright : t.border, 1.0));
+        p->setBrush(Qt::NoBrush);
+        p->drawRect(QRectF(option->rect).adjusted(0.5, 0.5, -0.5, -0.5));
+        p->restore();
         return;
     }
     case PE_Frame:
@@ -311,6 +322,75 @@ void Style::drawComplexControl(ComplexControl control, const QStyleOptionComplex
         }
         break;
     }
+    case CC_TitleBar: {
+        if (const auto* tb = qstyleoption_cast<const QStyleOptionTitleBar*>(option)) {
+            const bool active = tb->titleBarState & State_Active;
+
+            // Bar
+            p->fillRect(tb->rect, active ? t.surfaceRaised : t.surface);
+            p->save();
+            p->setPen(QPen(active ? t.borderBright : t.border, 1.0));
+            const QRectF r = QRectF(tb->rect);
+            p->drawLine(r.bottomLeft() + QPointF(0, -0.5), r.bottomRight() + QPointF(0, -0.5));
+            p->restore();
+
+            // Title
+            const QRect label = proxy()->subControlRect(CC_TitleBar, tb, SC_TitleBarLabel, widget);
+            p->save();
+            p->setFont(t.headingFont(8.5));
+            p->setPen(active ? t.primary : t.textDim);
+            const QString text = QFontMetrics(p->font()).elidedText(
+                tb->text, Qt::ElideRight, label.width());
+            p->drawText(label, Qt::AlignLeft | Qt::AlignVCenter, text);
+            p->restore();
+
+            // Buttons
+            const SubControl buttons[] = { SC_TitleBarMinButton, SC_TitleBarNormalButton,
+                                           SC_TitleBarMaxButton, SC_TitleBarCloseButton };
+            p->save();
+            p->setRenderHint(QPainter::Antialiasing, true);
+            for (SubControl sc : buttons) {
+                if (!(tb->subControls & sc))
+                    continue;
+                const QRect br = proxy()->subControlRect(CC_TitleBar, tb, sc, widget);
+                if (!br.isValid())
+                    continue;
+                const bool over = (tb->activeSubControls & sc) && (tb->state & State_MouseOver);
+                const bool sunken = over && (tb->state & State_Sunken);
+                if (over)
+                    p->fillRect(br, alpha(sc == SC_TitleBarCloseButton ? t.danger : t.primary,
+                                          sunken ? 70 : 36));
+                QColor glyph = over ? (sc == SC_TitleBarCloseButton ? t.danger : t.primary)
+                                    : t.textDim;
+                p->setPen(QPen(glyph, 1.3));
+                p->setBrush(Qt::NoBrush);
+                const QPointF c = QRectF(br).center();
+                const qreal s = 3.5;
+                switch (sc) {
+                case SC_TitleBarCloseButton:
+                    p->drawLine(c + QPointF(-s, -s), c + QPointF(s, s));
+                    p->drawLine(c + QPointF(-s, s), c + QPointF(s, -s));
+                    break;
+                case SC_TitleBarMinButton:
+                    p->drawLine(c + QPointF(-s, s), c + QPointF(s, s));
+                    break;
+                case SC_TitleBarMaxButton:
+                    p->drawRect(QRectF(c - QPointF(s, s), QSizeF(2 * s, 2 * s)));
+                    break;
+                case SC_TitleBarNormalButton: // restore
+                    p->drawRect(QRectF(c - QPointF(s, s - 2), QSizeF(2 * s - 2, 2 * s - 2)));
+                    p->drawLine(c + QPointF(-s + 2, -s), c + QPointF(s, -s));
+                    p->drawLine(c + QPointF(s, -s), c + QPointF(s, s - 2));
+                    break;
+                default:
+                    break;
+                }
+            }
+            p->restore();
+            return;
+        }
+        break;
+    }
     case CC_ComboBox: {
         if (const auto* cb = qstyleoption_cast<const QStyleOptionComboBox*>(option)) {
             const bool open = cb->state & State_On;
@@ -408,6 +488,12 @@ int Style::pixelMetric(PixelMetric metric, const QStyleOption* option,
         return 14;
     case PM_ButtonMargin:
         return 12;
+    case PM_TitleBarHeight:
+        return 26;
+    case PM_MdiSubWindowFrameWidth:
+        return 3;
+    case PM_TabBarTabVSpace:
+        return 14;
     default:
         break;
     }
@@ -428,6 +514,14 @@ int Style::styleHint(StyleHint hint, const QStyleOption* option, const QWidget* 
         break;
     }
     return QProxyStyle::styleHint(hint, option, widget, returnData);
+}
+
+void Style::polish(QWidget* widget)
+{
+    QProxyStyle::polish(widget);
+    // Tab captions share the header/panel-title typography.
+    if (qobject_cast<QTabBar*>(widget))
+        widget->setFont(Theme::current().headingFont(8.5));
 }
 
 } // namespace sxui

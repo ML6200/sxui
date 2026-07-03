@@ -25,6 +25,8 @@ public:
     int styleHint(StyleHint hint, const QStyleOption* option, const QWidget* widget,
                   QStyleHintReturn* returnData) const override;
     QPalette standardPalette() const override;
+    void polish(QWidget* widget) override;
+    using QProxyStyle::polish;
 };
 
 } // namespace sxui

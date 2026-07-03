@@ -13,6 +13,8 @@
 #include "widgets/ImageView.h"
 #include "widgets/TableEditor.h"
 #include "widgets/Workspace.h"
+#include "media/VideoView.h"
+#include "media/Timeline.h"
 
 class QApplication;
 

@@ -39,8 +39,12 @@ src/                     the static sxui library
 │   │                    with rolling window, area fill + subtle glow
 │   └── BarChart         dim fill, bright cap, value labels
 apps/gallery/            component gallery / visual regression app
+                         (local only, not under version control)
 docs/PLAN.md             roadmap and status
 ```
+
+The `apps/` directory is gitignored; the build includes it only when
+present, so the repository stands alone as the library.
 
 ## Usage
 

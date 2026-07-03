@@ -8,3 +8,6 @@ CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
+
+# Local demo apps, not part of the library
+apps/

@@ -422,6 +422,8 @@ int Style::styleHint(StyleHint hint, const QStyleOption* option, const QWidget* 
     case SH_DitherDisabledText:
     case SH_UnderlineShortcut:
         return 0;
+    case SH_Table_GridLineColor:
+        return int(Theme::current().border.rgba());
     default:
         break;
     }

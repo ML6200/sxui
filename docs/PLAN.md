@@ -32,6 +32,18 @@ WebAssembly.
 - Gallery page 04 wiring both together: activating an image file in the
   browser opens it in the viewer.
 
+### 0.3.0 — table editor (2026-07-03)
+- `TableEditor`: editable data grid on QTableView. Internal
+  variant-based model (`setColumns`/`setRows`/`appendRow`/`rows`) with
+  an ADD ROW / REMOVE control strip and row-count readout, or any
+  external `QAbstractItemModel` via `setModel()`. In-place editing
+  emits `cellEdited(row, column, value)`; `setReadOnly()` for display
+  use. Style gains SH_Table_GridLineColor so grids draw in the theme
+  border color.
+- Housekeeping: the gallery app was removed from version control and
+  from history entirely — the repository tracks only the library; the
+  gallery remains a local untracked verification tool.
+
 ## Next
 
 1. **App shell** — fullscreen/windowed application frame with page
@@ -42,8 +54,7 @@ WebAssembly.
    `aqtinstall`, add a CI-able `qt-cmake` build; verify gallery in
    browser.
 3. **More components as needed by the home system** — log/terminal view,
-   data table, notification toasts, modal dialogs, virtual keyboard
-   (touch kiosk).
+   notification toasts, modal dialogs, virtual keyboard (touch kiosk).
 4. **Theme variants** — amber/red alternative palettes are already
    possible via `Theme::current()`; add presets.
 

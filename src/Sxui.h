@@ -11,6 +11,7 @@
 #include "charts/BarChart.h"
 #include "widgets/FileBrowser.h"
 #include "widgets/ImageView.h"
+#include "widgets/TableEditor.h"
 
 class QApplication;
 

@@ -31,9 +31,13 @@ src/                     the static sxui library
 │   │                    (outlined icon, name, amber date line, size);
 │   │                    dirs descend on activation, files emit
 │   │                    fileActivated()
-│   └── ImageView        pan/zoom image viewer (cursor-anchored wheel
-│                        zoom, drag pan, double-click to fit) with an
-│                        optional phosphor luminance-ramp mode
+│   ├── ImageView        pan/zoom image viewer (cursor-anchored wheel
+│   │                    zoom, drag pan, double-click to fit) with an
+│   │                    optional phosphor luminance-ramp mode
+│   └── TableEditor      editable data grid: in-place cell editing,
+│                        ADD ROW/REMOVE control strip with row count,
+│                        variant-based row API or any external
+│                        QAbstractItemModel via setModel()
 ├── charts/
 │   ├── LineChart        multi-series, auto-scaling axes, live append
 │   │                    with rolling window, area fill + subtle glow

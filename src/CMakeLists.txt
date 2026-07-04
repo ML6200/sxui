@@ -7,6 +7,8 @@ qt_add_library(sxui STATIC
     core/Style.cpp
     widgets/Panel.h
     widgets/Panel.cpp
+    widgets/ScrollArea.h
+    widgets/ScrollArea.cpp
     widgets/Toggle.h
     widgets/Toggle.cpp
     widgets/Gauge.h

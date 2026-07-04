@@ -33,8 +33,8 @@ void Gauge::setRange(double min, double max)
     update();
 }
 
-void Gauge::setLabel(const QString& label) { m_label = label; update(); }
-void Gauge::setUnit(const QString& unit) { m_unit = unit; update(); }
+void Gauge::setLabel(const QString& label) { m_label = label; invalidateBackground(); update(); }
+void Gauge::setUnit(const QString& unit) { m_unit = unit; invalidateBackground(); update(); }
 void Gauge::setDecimals(int decimals) { m_decimals = qMax(0, decimals); update(); }
 
 void Gauge::setThresholds(double warning, double critical)
@@ -66,32 +66,40 @@ QColor Gauge::arcColor() const
     return t.primary;
 }
 
-void Gauge::paintEvent(QPaintEvent*)
+QRectF Gauge::arcGeometry(qreal& penWidth) const
 {
+    const qreal side = qMin(width(), height());
+    penWidth = qMax(3.0, side * 0.055);
+    QRectF arcRect((width() - side) / 2.0, (height() - side) / 2.0, side, side);
+    arcRect.adjust(penWidth, penWidth, -penWidth, -penWidth);
+    return arcRect;
+}
+
+// Rasterize the parts that never change during a value animation — the track
+// arc, tick marks, unit and label text — into a size-keyed pixmap. The value
+// arc and readout paint over this each frame.
+void Gauge::ensureBackground()
+{
+    const qreal dpr = devicePixelRatioF();
+    const QSize px = size() * dpr;
+    if (!m_bg.isNull() && m_bg.size() == px)
+        return;
+
+    m_bg = QPixmap(px);
+    m_bg.setDevicePixelRatio(dpr);
+    m_bg.fill(Qt::transparent);
+
     const Theme& t = Theme::current();
-    QPainter p(this);
+    QPainter p(&m_bg);
     p.setRenderHint(QPainter::Antialiasing, true);
 
+    qreal penW;
+    const QRectF arcRect = arcGeometry(penW);
     const qreal side = qMin(width(), height());
-    const qreal penW = qMax(3.0, side * 0.055);
-    QRectF arcRect((width() - side) / 2.0, (height() - side) / 2.0, side, side);
-    arcRect.adjust(penW, penW, -penW, -penW);
-
-    const double frac = qBound(0.0, (m_displayed - m_min) / (m_max - m_min), 1.0);
-    const QColor c = arcColor();
 
     // Track
     p.setPen(QPen(alpha(t.border, 170), penW, Qt::SolidLine, Qt::FlatCap));
     p.drawArc(arcRect, kStartAngle, kSpanAngle);
-
-    // Value arc with a soft glow pass underneath
-    const int span = int(kSpanAngle * frac);
-    if (frac > 0.001) {
-        p.setPen(QPen(alpha(c, 70), penW * 2.2, Qt::SolidLine, Qt::FlatCap));
-        p.drawArc(arcRect, kStartAngle, span);
-        p.setPen(QPen(c, penW, Qt::SolidLine, Qt::FlatCap));
-        p.drawArc(arcRect, kStartAngle, span);
-    }
 
     // Ticks at 0/25/50/75/100 %
     const QPointF center = arcRect.center();
@@ -104,13 +112,6 @@ void Gauge::paintEvent(QPaintEvent*)
         p.drawLine(center + dir * rInner, center + dir * rOuter);
     }
 
-    // Readout
-    const QString valueText = QString::number(m_displayed, 'f', m_decimals);
-    p.setFont(t.font(side * 0.16, QFont::DemiBold));
-    p.setPen(t.textBright);
-    QRectF valueRect = arcRect.adjusted(0, -side * 0.04, 0, -side * 0.04);
-    p.drawText(valueRect, Qt::AlignCenter, valueText);
-
     p.setFont(t.font(side * 0.065));
     p.setPen(t.textDim);
     if (!m_unit.isEmpty()) {
@@ -122,6 +123,39 @@ void Gauge::paintEvent(QPaintEvent*)
         p.drawText(QRectF(0, height() - side * 0.14, width(), side * 0.12),
                    Qt::AlignHCenter | Qt::AlignVCenter, m_label);
     }
+}
+
+void Gauge::paintEvent(QPaintEvent*)
+{
+    ensureBackground();
+
+    const Theme& t = Theme::current();
+    QPainter p(this);
+    p.drawPixmap(0, 0, m_bg);
+    p.setRenderHint(QPainter::Antialiasing, true);
+
+    qreal penW;
+    const QRectF arcRect = arcGeometry(penW);
+    const qreal side = qMin(width(), height());
+
+    const double frac = qBound(0.0, (m_displayed - m_min) / (m_max - m_min), 1.0);
+    const QColor c = arcColor();
+
+    // Value arc with a soft glow pass underneath
+    const int span = int(kSpanAngle * frac);
+    if (frac > 0.001) {
+        p.setPen(QPen(alpha(c, 70), penW * 2.2, Qt::SolidLine, Qt::FlatCap));
+        p.drawArc(arcRect, kStartAngle, span);
+        p.setPen(QPen(c, penW, Qt::SolidLine, Qt::FlatCap));
+        p.drawArc(arcRect, kStartAngle, span);
+    }
+
+    // Readout
+    const QString valueText = QString::number(m_displayed, 'f', m_decimals);
+    p.setFont(t.font(side * 0.16, QFont::DemiBold));
+    p.setPen(t.textBright);
+    QRectF valueRect = arcRect.adjusted(0, -side * 0.04, 0, -side * 0.04);
+    p.drawText(valueRect, Qt::AlignCenter, valueText);
 }
 
 } // namespace sxui

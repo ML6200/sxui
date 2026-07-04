@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QPixmap>
+#include <QRectF>
 #include <QWidget>
 
 class QVariantAnimation;
@@ -33,6 +35,12 @@ protected:
 
 private:
     QColor arcColor() const;
+    // Shared geometry so the cached background and the live value arc align.
+    QRectF arcGeometry(qreal& penWidth) const;
+    // Static layer (track, ticks, unit, label) rasterized once per size; only
+    // the value arc and readout are repainted per animation frame.
+    void ensureBackground();
+    void invalidateBackground() { m_bg = QPixmap(); }
 
     double m_min = 0.0, m_max = 100.0;
     double m_value = 0.0;      // target value
@@ -41,6 +49,7 @@ private:
     QString m_label, m_unit;
     int m_decimals = 0;
     QVariantAnimation* m_anim;
+    QPixmap m_bg;              // cached static layer, keyed on device-pixel size
 };
 
 } // namespace sxui

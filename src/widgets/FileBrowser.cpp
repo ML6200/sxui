@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QStyledItemDelegate>
 #include <QVBoxLayout>
+#include <QOpenGLWidget>
 
 namespace sxui {
 
@@ -167,6 +168,7 @@ FileBrowser::FileBrowser(QWidget* parent)
     lay->addLayout(bar);
 
     m_view = new QListView;
+    m_view->setViewport(new QOpenGLWidget());
     m_view->setModel(m_model);
     m_view->setItemDelegate(new FileCardDelegate(m_view));
     m_view->setFrameShape(QFrame::NoFrame);

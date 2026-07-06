@@ -2,12 +2,14 @@
 
 #include <QScroller>
 #include <QScrollerProperties>
+#include <QOpenGLWidget>
 
 namespace sxui {
 
 ScrollArea::ScrollArea(QWidget* parent)
     : QScrollArea(parent)
 {
+    setViewport(new QOpenGLWidget());
     setFrameShape(QFrame::NoFrame);
     setWidgetResizable(true);
 

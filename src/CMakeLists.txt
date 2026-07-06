@@ -36,4 +36,4 @@ target_include_directories(sxui PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
-target_link_libraries(sxui PUBLIC Qt6::Widgets)
+target_link_libraries(sxui PUBLIC Qt6::Widgets Qt6::OpenGLWidgets)

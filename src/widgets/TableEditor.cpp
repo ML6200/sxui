@@ -9,6 +9,7 @@
 #include <QStandardItemModel>
 #include <QTableView>
 #include <QVBoxLayout>
+#include <QOpenGLWidget>
 
 #include <algorithm>
 
@@ -25,6 +26,7 @@ TableEditor::TableEditor(QWidget* parent)
     lay->setSpacing(8);
 
     m_view = new QTableView;
+    m_view->setViewport(new QOpenGLWidget());
     m_view->setModel(m_model);
     m_view->setAlternatingRowColors(true);
     m_view->setSelectionMode(QAbstractItemView::ExtendedSelection);

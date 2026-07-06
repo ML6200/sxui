@@ -61,6 +61,7 @@ int LineChart::addSeries(const QString& name, const QColor& color)
     s.name = name;
     s.color = color.isValid() ? color : cycleColor(m_series.size());
     m_series.append(s);
+    invalidateFrame();
     update();
     return m_series.size() - 1;
 }
@@ -70,6 +71,7 @@ void LineChart::setSeriesData(int index, QVector<QPointF> points)
     if (index < 0 || index >= m_series.size())
         return;
     m_series[index].points = std::move(points);
+    invalidateFrame();
     update();
 }
 
@@ -81,23 +83,25 @@ void LineChart::appendPoint(int index, const QPointF& point, int maxPoints)
     pts.append(point);
     if (maxPoints > 0 && pts.size() > maxPoints)
         pts.remove(0, pts.size() - maxPoints);
+    invalidateFrame();
     update();
 }
 
 void LineChart::clearSeries()
 {
     m_series.clear();
+    invalidateFrame();
     update();
 }
 
-void LineChart::setXRange(double min, double max) { m_autoX = false; m_xMin = min; m_xMax = max; update(); }
-void LineChart::setYRange(double min, double max) { m_autoY = false; m_yMin = min; m_yMax = max; update(); }
-void LineChart::setAutoXRange() { m_autoX = true; update(); }
-void LineChart::setAutoYRange() { m_autoY = true; update(); }
-void LineChart::setXFormatter(Formatter formatter) { m_xFmt = std::move(formatter); update(); }
-void LineChart::setYFormatter(Formatter formatter) { m_yFmt = std::move(formatter); update(); }
-void LineChart::setFillEnabled(bool enabled) { m_fill = enabled; update(); }
-void LineChart::setLegendVisible(bool visible) { m_legend = visible; update(); }
+void LineChart::setXRange(double min, double max) { m_autoX = false; m_xMin = min; m_xMax = max; invalidateFrame(); update(); }
+void LineChart::setYRange(double min, double max) { m_autoY = false; m_yMin = min; m_yMax = max; invalidateFrame(); update(); }
+void LineChart::setAutoXRange() { m_autoX = true; invalidateFrame(); update(); }
+void LineChart::setAutoYRange() { m_autoY = true; invalidateFrame(); update(); }
+void LineChart::setXFormatter(Formatter formatter) { m_xFmt = std::move(formatter); invalidateFrame(); update(); }
+void LineChart::setYFormatter(Formatter formatter) { m_yFmt = std::move(formatter); invalidateFrame(); update(); }
+void LineChart::setFillEnabled(bool enabled) { m_fill = enabled; invalidateFrame(); update(); }
+void LineChart::setLegendVisible(bool visible) { m_legend = visible; invalidateFrame(); update(); }
 
 void LineChart::dataRange(double& xMin, double& xMax, double& yMin, double& yMax) const
 {
@@ -130,8 +134,27 @@ void LineChart::dataRange(double& xMin, double& xMax, double& yMin, double& yMax
 
 void LineChart::paintEvent(QPaintEvent*)
 {
+    ensureFrame();
+    QPainter(this).drawPixmap(0, 0, m_frame);
+}
+
+void LineChart::ensureFrame()
+{
+    const qreal dpr = devicePixelRatioF();
+    const QSize px = size() * dpr;
+    if (px.isEmpty()) {
+        m_frame = QPixmap();
+        return;
+    }
+    if (!m_frame.isNull() && m_frame.size() == px)
+        return;
+
+    m_frame = QPixmap(px);
+    m_frame.setDevicePixelRatio(dpr);
+    m_frame.fill(Qt::transparent);
+
     const Theme& t = Theme::current();
-    QPainter p(this);
+    QPainter p(&m_frame);
 
     double xMin = m_xMin, xMax = m_xMax, yMin = m_yMin, yMax = m_yMax;
     if (m_autoX || m_autoY) {

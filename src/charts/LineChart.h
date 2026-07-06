@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QPixmap>
 #include <QWidget>
 #include <QVector>
 #include <functional>
@@ -47,6 +48,12 @@ private:
     };
 
     void dataRange(double& xMin, double& xMax, double& yMin, double& yMax) const;
+    // The frame (grid, series, legend) only changes when data, ranges, or the
+    // widget size change — never per repaint. Scroll and compositing repaints
+    // arrive far more often than data does, so rasterize the whole frame once
+    // into a device-pixel-keyed pixmap and blit it on paint.
+    void ensureFrame();
+    void invalidateFrame() { m_frame = QPixmap(); }
 
     QVector<Series> m_series;
     bool m_autoX = true, m_autoY = true;
@@ -54,6 +61,7 @@ private:
     bool m_fill = true;
     bool m_legend = true;
     Formatter m_xFmt, m_yFmt;
+    QPixmap m_frame; // cached rendered frame, keyed on device-pixel size
 };
 
 } // namespace sxui

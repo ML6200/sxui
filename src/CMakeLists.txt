@@ -7,6 +7,8 @@ qt_add_library(sxui STATIC
     core/Style.cpp
     widgets/Panel.h
     widgets/Panel.cpp
+    widgets/ScrollArea.h
+    widgets/ScrollArea.cpp
     widgets/Toggle.h
     widgets/Toggle.cpp
     widgets/Gauge.h
@@ -34,4 +36,4 @@ target_include_directories(sxui PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
-target_link_libraries(sxui PUBLIC Qt6::Widgets)
+target_link_libraries(sxui PUBLIC Qt6::Widgets Qt6::OpenGLWidgets)

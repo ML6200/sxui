@@ -5,6 +5,7 @@
 #include "core/Theme.h"
 #include "core/Style.h"
 #include "widgets/Panel.h"
+#include "widgets/ScrollArea.h"
 #include "widgets/Toggle.h"
 #include "widgets/Gauge.h"
 #include "charts/LineChart.h"

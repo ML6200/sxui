@@ -2,12 +2,14 @@
 #include "core/Theme.h"
 
 #include <QMdiSubWindow>
+#include <QOpenGLWidget>
 
 namespace sxui {
 
 Workspace::Workspace(QWidget* parent)
     : QMdiArea(parent)
 {
+    setViewport(new QOpenGLWidget());
     setBackground(Theme::current().background);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
